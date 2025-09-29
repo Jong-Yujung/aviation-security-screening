@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title><span data-i18n="title.main">항공보안 통합 안내 시스템</span></title>
+<style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --blue: #1e3a8a;
+            --light-blue: #3b82f6;
+            --red: #dc2626;
+            --green: #059669;
+            --yellow: #d97706;
+            --gray: #6b7280;
+            --light-gray: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: #1f2937;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--light-blue) 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .lang-select {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .lang-select select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .legal {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--blue);
+        }
+
+        .legal h2 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .legal-text {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            gap: 0.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--light-gray);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: var(--light-blue);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: var(--blue);
+            color: white;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--blue);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .status.prohibited {
+            background: #fee2e2;
+            color: var(--red);
+        }
+
+        .status.restricted {
+            background: #fef3c7;
+            color: var(--yellow);
+        }
+
+        .status.allowed {
+            background: #d1fae5;
+            color: var(--green);
+        }
+
+        .item-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .item-list li {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--red);
+            background: #fef2f2;
+        }
+
+        .item-list.allowed li {
+            background: #f0fdf4;
+            border-left-color: var(--green);
+        }
+
+        .item-list.restricted li {
+            background: #fffbeb;
+            border-left-color: var(--yellow);
+        }
+
+        .notice {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 1px solid var(--light-blue);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .notice h4 {
+            color: var(--blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-card {
+            border-left: 4px solid var(--yellow);
+            margin-bottom: 2rem;
+        }
+
+        .solution-card .card-icon {
+            background: var(--yellow);
+        }
+
+        .footer {
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .contact {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .tab-nav { flex-direction: column; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+<h1><span data-i18n="title.main">항공보안 통합 안내 시스템</span></h1>
+<p><span data-i18n="title.sub">Aviation Security Comprehensive Guide System</span></p>
+</header>
+<div class="lang-select">
+<label><span data-i18n="ui.lang.label">언어 선택:</span></label>
+<select id="langSelect">
+<option value="ko">🇰🇷 한국어</option>
+<option value="en">🇺🇸 English</option>
+<option value="zh">🇨🇳 中文</option>
+<option value="ja">🇯🇵 日本語</option>
+</select>
+</div>
+<section class="legal">
+<h2><span data-i18n="legal.heading">📋 관련 근거</span></h2>
+<div class="legal-text">
+<strong><strong data-i18n="legal.basis.label">※ 관련근거:</strong></strong><br/>
+<span data-i18n="legal.basis.1">• 「항공보안법」 제21조 제1항, 국토교통부고시 제2021-1274호 '항공기 내 반입금지 위해물품'</span><br/>
+<span data-i18n="legal.basis.2">• 「항공보안법」 제14조 제5항, 국토교통부고시 제2021-864호 '<span data-i18n="carry.lag.title">액체·분무·겔류</span> 등 항공기내 휴대 반입 금지물질 운영기준'</span><br/>
+<span data-i18n="legal.basis.3">• 국제민간항공기구(ICAO) 표준 및 권고사항에 따른 보안검색 규정</span>
+</div>
+</section>
+<div class="tabs">
+<div class="tab-nav">
+<button class="tab-btn active" onclick="showTab('carry-on')">
+                🎒 <span data-i18n="tabs.carry">휴대수하물</span><br/><small><small data-i18n="tabs.carry.en">Carry-on Baggage</small></small>
+</button>
+<button class="tab-btn" onclick="showTab('checked')">
+                🧳 <span data-i18n="tabs.checked">위탁수하물</span><br/><small><small data-i18n="tabs.checked.en">Checked Baggage</small></small>
+</button>
+<button class="tab-btn" onclick="showTab('transit')">
+                ✈️ <span data-i18n="tabs.transit">환승보안검색</span><br/><small><small data-i18n="tabs.transit.en">Transit Security</small></small>
+</button>
+</div>
+</div>
+<div class="content">
+<span data-i18n="misc.carry.label2">휴대수하물</span>
+<div class="section active" id="carry-on">
+<div class="card solution-card">
+<div class="card-header">
+<div class="card-icon">💡</div>
+<div>
+<div class="card-title"><span data-i18n="carry.solution.title">금지물품 적발 시 대처요령</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.solution.subtitle">Solutions for Prohibited Items</span></div>
+</div>
+</div>
+<div class="notice" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: var(--yellow);">
+<h4><span data-i18n="carry.solution.noticeTitle">보안검색에서 금지물품이 발견되었을 때</span></h4>
+<p><span data-i18n="carry.solution.noticeBody">당황하지 마시고 아래 방법 중 하나를 선택하여 처리하실 수 있습니다.</span></p>
+</div>
+<ul class="item-list restricted">
+<li><strong><span data-i18n="checked.solution.opt1">① 폐기</span></strong><span data-i18n="carry.solution.opt1.sub">- 가장 간단한 방법이지만 물품을 되찾을 수 없습니다</span></li>
+<li><strong><span data-i18n="carry.solution.opt2">② 위탁수하물 접수</span></strong><span data-i18n="carry.solution.opt2.sub">- 항공사 카운터 방문하여 위탁수하물로 접수 (추가 요금 발생 가능)</span></li>
+<li><strong><span data-i18n="carry.solution.opt3">③ 보관/택배 서비스</span></strong><span data-i18n="carry.solution.opt3.sub">- 공항 내 짐 보관 서비스 또는 국내 택배 서비스 이용</span></li>
+<li><strong><span data-i18n="carry.solution.opt4">④ 지인 인계</span></strong><span data-i18n="carry.solution.opt4.sub">- 출국장 밖에 있는 지인에게 물품 전달 (재입장 필요)</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="carry.solution.timeTitle">⏰ 시간 여유 확인</span></h4>
+<p><span data-i18n="carry.solution.timeBody">항공편 출발시간을 고려하여 충분한 시간이 있는 경우에만 ②③④ 방법을 선택하세요. 시간이 촉박한 경우 폐기를 권장합니다.</span></p>
+</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🧴</div>
+<div>
+<div class="card-title"><span data-i18n="carry.lag.title">액체·분무·겔류</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.lag.subtitle">Liquids, Aerosols &amp; Gels</span></div>
+</div>
+</div>
+<div class="status restricted"><span class="status restricted" data-i18n="status.restricted">⚡ 제한적 허용</span></div>
+<ul class="item-list restricted">
+<li><span data-i18n="carry.lag.rule1">100ml 이하 개별용기에 담긴 액체류만 허용</span></li>
+<li><span data-i18n="carry.lag.rule2">1인당 1L 투명 지퍼백 1개에 보관</span></li>
+<li><span data-i18n="carry.lag.rule3">화장품, 치약, 샴푸, 음료수 포함</span></li>
+<li><span data-i18n="carry.lag.rule4">국물포함 음식(김치), 장류(고추장, 된장, 잼) 100ml 초과 시 반입 불가</span></li>
+<li><span data-i18n="carry.lag.rule5">의약품은 처방전 제시 시 예외 적용</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="carry.lag.noticeTitle">국제선 전용 규정</span></h4>
+<p><span data-i18n="carry.lag.noticeBody">국내선은 액체류 제한이 없으나, 국제선 탑승 시 엄격히 적용됩니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔪</div>
+<div>
+<div class="card-title"><span data-i18n="carry.sharp.title">날카로운 물체</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.sharp.subtitle">Sharp Objects</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="carry.sharp.li1">면도칼날, 커터칼날, 다목적 칼</span></li>
+<li><span data-i18n="carry.sharp.li2">접이식 칼, 외과용 메스</span></li>
+<li><span data-i18n="carry.sharp.li3">날 길이 6cm 초과 가위</span></li>
+<li><span data-i18n="carry.sharp.li4">뾰족한 손톱깎이, 송곳</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="carry.sharp.allowedTitle">허용 품목</span></h4>
+<p><span data-i18n="carry.sharp.allowedBody">일회용 면도기, 6cm 이하 가위, 손톱깎이(뾰족하지 않은 것)는 허용됩니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔧</div>
+<div>
+<div class="card-title"><span data-i18n="carry.tools.title">공구류</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.tools.subtitle">Tools</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="carry.tools.li1">망치, 드릴 및 부품</span></li>
+<li><span data-i18n="carry.tools.li2">금속 길이 6cm 초과 드라이버</span></li>
+<li><span data-i18n="carry.tools.li3">도끼, 전정가위, 못총, 톱</span></li>
+<li><span data-i18n="carry.tools.li4">송곳, 대형 스패너</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">⚾</div>
+<div>
+<div class="card-title"><span data-i18n="carry.sports.title">스포츠용품·둔기</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.sports.subtitle">Sports Equipment</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="carry.sports.li1">야구방망이, 하키스틱, 골프채</span></li>
+<li><span data-i18n="carry.sports.li2">당구큐, 아령, 볼링공</span></li>
+<li><span data-i18n="carry.sports.li3">활, 화살, 양궁 장비</span></li>
+<li><span data-i18n="carry.sports.li4">1/3 이상 공기 주입된 공류</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="carry.sports.noticeTitle">공류 반입 방법</span></h4>
+<p><span data-i18n="carry.sports.noticeBody">축구공, 농구공 등은 공기를 1/3 미만으로 빼면 휴대 가능합니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔋</div>
+<div>
+<div class="card-title"><span data-i18n="carry.battery.title">전자기기·배터리</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.battery.subtitle">Electronic Devices</span></div>
+</div>
+</div>
+<div class="status allowed"><span class="status allowed" data-i18n="status.allowed">✅ 허용</span></div>
+<ul class="item-list allowed">
+<li><span data-i18n="carry.battery.li1">보조배터리 (100Wh 이하) - 휴대만 가능</span></li>
+<li><span data-i18n="carry.battery.li2">노트북, 태블릿, 스마트폰</span></li>
+<li><span data-i18n="carry.battery.li3">전자담배 (휴대만 가능, 위탁 불가)</span></li>
+<li><span data-i18n="carry.battery.li4">카메라, 캠코더</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="carry.battery.noticeTitle">배터리 <span data-i18n="transit.lag.noticeTitle">주의사항</span></span></h4>
+<p><span data-i18n="carry.battery.noticeBody">리튬배터리는 반드시 휴대수하물로만 운송 가능하며, 위탁수하물 반입이 금지됩니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">⚡</div>
+<div>
+<div class="card-title"><span data-i18n="carry.selfdef.title">호신용품</span></div>
+<div style="color: var(--gray);"><span data-i18n="carry.selfdef.subtitle">Self-Defense Items</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="carry.selfdef.li1">전자충격기, 스턴건</span></li>
+<li><span data-i18n="carry.selfdef.li2">고추스프레이, 최루스프레이</span></li>
+<li><span data-i18n="carry.selfdef.li3">쿠보탄, 호신용 스틱</span></li>
+<li><span data-i18n="carry.selfdef.li4">쌍절곤, 호신용 무기</span></li>
+</ul>
+</div>
+</div>
+</div>
+<span data-i18n="misc.checked.label2">위탁수하물</span>
+<div class="section" id="checked">
+<div class="card solution-card" style="border-left-color: var(--red);">
+<div class="card-header">
+<div class="card-icon" style="background: var(--red);">🚨</div>
+<div>
+<div class="card-title"><span data-i18n="misc.checked.label2">위탁수하물</span><span data-i18n="carry.solution.title">금지물품 적발 시 대처요령</span></div>
+<div style="color: var(--gray);"><span data-i18n="misc.solutions_for">Solutions for</span><small data-i18n="tabs.checked.en">Checked Baggage</small><span data-i18n="misc.violations">Violations</span></div>
+</div>
+</div>
+<div class="notice" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: var(--red);">
+<h4><span data-i18n="checked.solution.noticeTitle">위탁수하물에서 금지물품이 발견되었을 때</span></h4>
+<p><span data-i18n="checked.solution.noticeBody">위탁수하물은 항공기 안전에 직결되므로 더욱 엄격하게 관리됩니다.</span></p>
+</div>
+<ul class="item-list">
+<li><strong><span data-i18n="checked.solution.opt1">① 폐기</span></strong> - <span data-i18n="checked.danger.title">위험물질</span><span data-i18n="checked.solution.opt1.sub.tail">은 즉시 폐기 처리됩니다</span></li>
+<li><strong><span data-i18n="checked.solution.opt2">② 휴대수하물 전환</span></strong> - <span data-i18n="carry.sharp.allowedTitle">허용 품목</span><span data-i18n="checked.solution.opt2.sub.tail">인 경우 휴대수하물로 변경 가능</span></li>
+</ul>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-header">
+<div class="card-icon">💥</div>
+<div>
+<div class="card-title"><span data-i18n="checked.danger.title">위험물질</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.danger.subtitle">Dangerous Materials</span></div>
+</div>
+</div>
+<div class="status prohibited">❌ <span data-i18n="status.totalban">완전금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="checked.danger.li1">폭발물, 화약, 폭죽류</span></li>
+<li><span data-i18n="checked.danger.li2">인화성 가스 및 액체</span></li>
+<li><span data-i18n="checked.danger.li3">독성물질, 부식성 물질</span></li>
+<li><span data-i18n="checked.danger.li4">방사능 물질</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔫</div>
+<div>
+<div class="card-title"><span data-i18n="checked.firearms.title">총기류</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.firearms.subtitle">Firearms</span></div>
+</div>
+</div>
+<div class="status restricted">⚡ <span data-i18n="status.special">특별허가 필요</span></div>
+<ul class="item-list restricted">
+<li><span data-i18n="checked.firearms.li1">총기소지허가서 또는 수출입허가서 제시</span></li>
+<li><span data-i18n="checked.firearms.li2">총알과 분리 보관</span></li>
+<li><span data-i18n="checked.firearms.li3">견고한 보관함에 잠금 보관</span></li>
+<li><span data-i18n="checked.firearms.li4">항공사 사전 신고 필수</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔋</div>
+<div>
+<div class="card-title"><span data-i18n="checked.battery.title">배터리류</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.battery.subtitle">Batteries</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="checked.battery.li1">여분 리튬배터리</span></li>
+<li><span data-i18n="checked.battery.li2">보조배터리</span></li>
+<li><span data-i18n="checked.battery.li3">전자담배</span></li>
+<li><span data-i18n="checked.battery.li4">손상된 배터리가 포함된 기기</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="checked.battery.noticeTitle">배터리 안전수칙</span></h4>
+<p><span data-i18n="checked.battery.noticeBody">모든 여분 배터리는 반드시 휴대수하물로만 운송해야 합니다. 위탁수하물에는 절대 넣으면 안됩니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🍷</div>
+<div>
+<div class="card-title"><span data-i18n="checked.alcohol.title">주류 및 액체류</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.alcohol.subtitle">Alcohol &amp; Liquids</span></div>
+</div>
+</div>
+<div class="status allowed"><span class="status allowed" data-i18n="status.allowed">✅ 허용</span></div>
+<div class="notice">
+<h4><h4 data-i18n="checked.alcohol.rulesTitle">🍺 <span data-i18n="checked.alcohol.rulesTitleText">주류 반입 규정 (알코올 도수별)</span></h4></h4>
+<ul class="item-list allowed" style="margin-top: 0.5rem;">
+<li style="background: #f0fdf4;"><strong><span data-i18n="checked.alcohol.rule1.label">① 24도(%) 미만:</span></strong><span data-i18n="checked.alcohol.rule1.body">양의 제한 없이 반입 가능 (소주, 맥주, 와인)</span></li>
+<li style="background: #fffbeb;"><strong><span data-i18n="checked.alcohol.rule2.label">② 24도(%) 이상 70도(%) 미만:</span></strong><span data-i18n="checked.alcohol.rule2.body">1인당 5L까지 반입 가능 (위스키, 보드카)</span></li>
+<li style="background: #fef2f2;"><strong><span data-i18n="checked.alcohol.rule3.label">③ 70도(%) 이상:</span></strong><span data-i18n="checked.alcohol.rule3.body.tail">반입 불가 (에탄올 등 인화성</span><span data-i18n="checked.danger.title">위험물질</span>)</li>
+</ul>
+<p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--gray);">
+                            💡 <strong><strong data-i18n="checked.alcohol.exampleLabel">예시:</strong></strong><span data-i18n="checked.alcohol.examples">소주(20도), 맥주(5도) = 제한없음 | 위스키(40도) = 5L까지 | 에탄올(95도) = 반입금지</span></p>
+</div>
+<ul class="item-list allowed">
+<li><span data-i18n="checked.allowed.cosmetics">화장품 (개별 500ml 이하, 총 2kg까지)</span></li>
+<li><span data-i18n="checked.allowed.medsfood">의약품, 식품류</span></li>
+<li><span data-i18n="checked.allowed.drinks">생수, 음료수 (대용량)</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🏌️</div>
+<div>
+<div class="card-title"><span data-i18n="checked.sports.title">스포츠장비</span></div>
+<div style="color: var(--gray);"><span data-i18n="checked.sports.subtitle">Sports Equipment</span></div>
+</div>
+</div>
+<div class="status allowed"><span class="status allowed" data-i18n="status.allowed">✅ 허용</span></div>
+<ul class="item-list allowed">
+<li><span data-i18n="checked.sports.li1">골프클럽, 야구방망이</span></li>
+<li><span data-i18n="checked.sports.li2">스키장비, 스노보드</span></li>
+<li><span data-i18n="checked.sports.li3">자전거 (포장 시)</span></li>
+<li><span data-i18n="checked.sports.li4">낚시대, 서핑보드</span></li>
+</ul>
+</div>
+</div>
+</div>
+<span data-i18n="misc.transit.label2">환승보안검색</span>
+<div class="section" id="transit">
+<div class="card solution-card" style="border-left-color: var(--light-blue);">
+<div class="card-header">
+<div class="card-icon" style="background: var(--light-blue);">🔄</div>
+<div>
+<div class="card-title"><span data-i18n="transit.solution.title">환승 시 금지물품 적발 대처요령</span></div>
+<div style="color: var(--gray);"><span data-i18n="misc.solutions_for">Solutions for</span><small data-i18n="tabs.transit.en">Transit Security</small><span data-i18n="misc.issues">Issues</span></div>
+</div>
+</div>
+<div class="notice">
+<h4><span data-i18n="transit.solution.noticeTitle">환승 보안검색에서 문제가 발생했을 때</span></h4>
+<p><span data-i18n="transit.solution.noticeBody">경유지별로 규정이 다르므로 현지 보안요원의 안내를 따라야 합니다.</span></p>
+</div>
+<ul class="item-list">
+<li><strong><span data-i18n="checked.solution.opt1">① 폐기</span></strong><span data-i18n="transit.solution.opt1.full">- 경유지 규정 위반 시 즉시 폐기 (보상 없음)</span></li>
+<li><strong><span data-i18n="transit.solution.opt2">② 면세품 재포장</span></strong><span data-i18n="transit.solution.opt2.full">- STEB 봉투 재밀봉 또는 소분 (가능한 경우)</span></li>
+</ul>
+<div class="notice" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: var(--yellow);">
+<h4><span data-i18n="transit.solution.tipTitle">💡 예방 팁</span></h4>
+<p><span data-i18n="transit.solution.tipBody">면세품 구매는 최종 경유지에서 하고, 경유지별 규정을 사전에 확인하세요. 중요한 물품은 휴대수하물에 넣지 마세요.</span></p>
+</div>
+</div>
+<div class="card-grid">
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🛂</div>
+<div>
+<div class="card-title"><span data-i18n="transit.lag.title">환승 시 액체류</span></div>
+<div style="color: var(--gray);"><span data-i18n="transit.lag.subtitle">Transit Liquids</span></div>
+</div>
+</div>
+<div class="status restricted"><span data-i18n="status.conditional">⚡ 조건부 허용</span></div>
+<ul class="item-list restricted">
+<li><span data-i18n="transit.lag.li1">면세품 전용봉투(STEB) 밀봉 상태 유지</span></li>
+<li><span data-i18n="transit.lag.li2">영수증과 함께 보관 필수</span></li>
+<li><span data-i18n="transit.lag.li3">경유지 규정에 따라 재검색 가능</span></li>
+<li><span data-i18n="transit.lag.li4">최종 목적지까지 미개봉 상태 유지</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="transit.lag.noticeTitle">주의사항</span></h4>
+<p><span data-i18n="transit.lag.noticeBody">일부 경유지(오사카 등)에서는 면세품도 폐기될 수 있으니 사전 확인 필요합니다.</span></p>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🔍</div>
+<div>
+<div class="card-title"><span data-i18n="transit.proc.title"><span data-i18n="transit.proc.title.txt">환승보안검색 절차</span></span></div>
+<div style="color: var(--gray);"><small data-i18n="tabs.transit.en">Transit Security</small><span data-i18n="misc.procedures">Procedures</span></div>
+</div>
+</div>
+<div class="status restricted"><span data-i18n="status.country.varies">⚡ 국가별 상이</span></div>
+<ul class="item-list restricted">
+<li><span data-i18n="transit.proc.r1">국제선→국내선: 보안검색 재실시</span></li>
+<li><span data-i18n="transit.proc.r2">국제선→국제선: 경유지 규정 적용</span></li>
+<li><span data-i18n="transit.proc.r3">국내선→국제선: 국제선 규정 적용</span></li>
+<li><span data-i18n="transit.proc.r4">미국, 중국 등: 무조건 재검색</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🚫</div>
+<div>
+<div class="card-title"><span data-i18n="transit.prohibited.title">환승 시 금지물품</span></div>
+<div style="color: var(--gray);"><span data-i18n="transit.prohibited.title.en">Transit Prohibited Items</span></div>
+</div>
+</div>
+<div class="status prohibited"><span class="status prohibited" data-i18n="status.prohibited">❌ 반입금지</span></div>
+<ul class="item-list">
+<li><span data-i18n="transit.prohibited.li1">경유지에서 구매한 100ml 초과 액체류</span></li>
+<li><span data-i18n="transit.prohibited.li2">밀봉 해제된 면세품</span></li>
+<li><span data-i18n="transit.prohibited.li3">경유지 현지 규정 위반 물품</span></li>
+<li><span data-i18n="transit.prohibited.li4">영수증 분실된 면세품</span></li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-icon">🌍</div>
+<div>
+<div class="card-title"><span data-i18n="transit.country.title"><span data-i18n="transit.country.title.txt">국가별 환승규정</span></span></div>
+<div style="color: var(--gray);"><span data-i18n="transit.country.subtitle">Country-Specific Rules</span></div>
+</div>
+</div>
+<ul class="item-list restricted">
+<li><strong><span data-i18n="transit.country.us.label">미국:</span></strong><span data-i18n="transit.country.us.body">모든 환승객 재검색 필수</span></li>
+<li><strong><span data-i18n="transit.country.jp.label">일본:</span></strong><span data-i18n="transit.country.jp.body">특정 액체류 엄격 제한</span></li>
+<li><strong><span data-i18n="transit.country.cn.label">중국:</span></strong><span data-i18n="transit.country.cn.body">전자기기 별도 검사</span></li>
+<li><strong><span data-i18n="transit.country.eu.label">유럽:</span></strong><span data-i18n="transit.country.eu.body">EU 내 환승 시 완화</span></li>
+</ul>
+<div class="notice">
+<h4><span data-i18n="transit.country.tipTitle">환승 팁</span></h4>
+<p><span data-i18n="transit.country.tipBody">경유지 공항 규정을 사전에 확인하고, 면세품 구매는 최종 경유지에서 하는 것이 안전합니다.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="footer">
+<p>
+<strong><strong data-i18n="footer.important">※ 중요 안내사항 ※</strong></strong><br/>
+<span data-i18n="footer.note1">본 안내는 대한민국 공항 기준이며, 해외 공항 및 항공사별로 규정이 다를 수 있습니다.</span><br/>
+<span data-i18n="footer.note2">최종 판단은 공항 보안검색요원 및 해당 항공사의 규정에 따릅니다.</span><br/>
+<span data-i18n="footer.note3">「항공보안법」 제44조에 따라 금지물품 반입 시 2년 이상 5년 이하의 징역에 처해질 수 있습니다.</span>
+</p>
+<div class="contact">
+<strong><strong data-i18n="footer.contactLabel">관련 문의:</strong></strong><br/><span data-i18n="footer.contact.line1">항공보안365: www.avsec365.or.kr | 한국교통안전공단: 054-459-7114</span><br/><span data-i18n="footer.contact.line2">인천국제공항: 1577-2600 | 김포공항: 02-2660-2114</span></div>
+</footer>
+<script>
+        function showTab(tabId) {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 선택된 섹션 보이기
+            document.getElementById(tabId).classList.add('active');
+            
+            // 클릭된 버튼 활성화
+            event.target.classList.add('active');
+        }
+
+        // 언어 선택 기능 (간단 버전)
+        document.getElementById('langSelect').addEventListener('change', function() {
+            // 실제 다국어 기능은 필요시 구현
+            console.log('언어 변경:', this.value);
+        });
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 카드 호버 효과
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+<script>
+// --- Lightweight i18n engine (ko, en, zh, ja) ---
+const I18N = {
+  ko: {
+    "title.main": "항공보안 통합 안내 시스템",
+    "title.sub": "Aviation Security Comprehensive Guide System",
+    "legal.heading": "📋 관련 근거",
+    "legal.basis.label": "※ 관련근거:",
+    "legal.basis.1": "• 「항공보안법」 제21조 제1항, 국토교통부고시 제2021-1274호 '항공기 내 반입금지 위해물품'",
+    "legal.basis.2": "• 「항공보안법」 제14조 제5항, 국토교통부고시 제2021-864호 '액체·분무·겔류 등 항공기내 휴대 반입 금지물질 운영기준'",
+    "legal.basis.3": "• 국제민간항공기구(ICAO) 표준 및 권고사항에 따른 보안검색 규정",
+    "tabs.carry": "휴대수하물",
+    "tabs.carry.en": "Carry-on Baggage",
+    "tabs.checked": "위탁수하물",
+    "tabs.checked.en": "Checked Baggage",
+    "tabs.transit": "환승보안검색",
+    "tabs.transit.en": "Transit Security",
+    "carry.solution.title": "금지물품 적발 시 대처요령",
+    "carry.solution.subtitle": "Solutions for Prohibited Items",
+    "carry.solution.noticeTitle": "보안검색에서 금지물품이 발견되었을 때",
+    "carry.solution.noticeBody": "당황하지 마시고 아래 방법 중 하나를 선택하여 처리하실 수 있습니다.",
+    "carry.solution.timeTitle": "⏰ 시간 여유 확인",
+    "carry.solution.timeBody": "항공편 출발시간을 고려하여 충분한 시간이 있는 경우에만 ②③④ 방법을 선택하세요. 시간이 촉박한 경우 폐기를 권장합니다.",
+    "carry.lag.title": "액체·분무·겔류",
+    "carry.lag.subtitle": "Liquids, Aerosols & Gels",
+    "status.restricted": "⚡ 제한적 허용",
+    "carry.lag.rule1": "100ml 이하 개별용기에 담긴 액체류만 허용",
+    "carry.lag.rule2": "1인당 1L 투명 지퍼백 1개에 보관",
+    "carry.lag.rule3": "화장품, 치약, 샴푸, 음료수 포함",
+    "carry.lag.rule4": "국물포함 음식(김치), 장류(고추장, 된장, 잼) 100ml 초과 시 반입 불가",
+    "carry.lag.rule5": "의약품은 처방전 제시 시 예외 적용",
+    "carry.lag.noticeTitle": "국제선 전용 규정",
+    "carry.lag.noticeBody": "국내선은 액체류 제한이 없으나, 국제선 탑승 시 엄격히 적용됩니다.",
+    "carry.sharp.title": "날카로운 물체",
+    "carry.sharp.subtitle": "Sharp Objects",
+    "status.prohibited": "❌ 반입금지",
+    "carry.sharp.allowedTitle": "허용 품목",
+    "carry.sharp.allowedBody": "일회용 면도기, 6cm 이하 가위, 손톱깎이(뾰족하지 않은 것)는 허용됩니다.",
+    "carry.tools.title": "공구류",
+    "carry.tools.subtitle": "Tools",
+    "carry.sports.title": "스포츠용품·둔기",
+    "carry.sports.subtitle": "Sports Equipment",
+    "carry.sports.noticeTitle": "공류 반입 방법",
+    "carry.sports.noticeBody": "축구공, 농구공 등은 공기를 1/3 미만으로 빼면 휴대 가능합니다.",
+    "carry.battery.title": "전자기기·배터리",
+    "carry.battery.subtitle": "Electronic Devices",
+    "status.allowed": "✅ 허용",
+    "carry.battery.noticeTitle": "배터리 주의사항",
+    "carry.battery.noticeBody": "리튬배터리는 반드시 휴대수하물로만 운송 가능하며, 위탁수하물 반입이 금지됩니다.",
+    "carry.selfdef.title": "호신용품",
+    "carry.selfdef.subtitle": "Self-Defense Items",
+    "checked.solution.title": "위탁수하물 금지물품 적발 시 대처요령",
+    "checked.solution.subtitle": "Solutions for Checked Baggage Violations",
+    "checked.solution.noticeTitle": "위탁수하물에서 금지물품이 발견되었을 때",
+    "checked.solution.noticeBody": "위탁수하물은 항공기 안전에 직결되므로 더욱 엄격하게 관리됩니다.",
+    "checked.danger.title": "위험물질",
+    "checked.danger.subtitle": "Dangerous Materials",
+    "status.totalban": "❌ 완전금지",
+    "checked.firearms.title": "총기류",
+    "checked.firearms.subtitle": "Firearms",
+    "status.special": "⚡ 특별허가 필요",
+    "checked.battery.title": "배터리류",
+    "checked.battery.subtitle": "Batteries",
+    "checked.battery.noticeTitle": "배터리 안전수칙",
+    "checked.battery.noticeBody": "모든 여분 배터리는 반드시 휴대수하물로만 운송해야 합니다. 위탁수하물에는 절대 넣으면 안됩니다.",
+    "checked.alcohol.title": "주류 및 액체류",
+    "checked.alcohol.subtitle": "Alcohol & Liquids",
+    "checked.alcohol.rulesTitle": "🍺 주류 반입 규정 (알코올 도수별)",
+    "checked.alcohol.exampleLabel": "예시:",
+    "checked.sports.title": "스포츠장비",
+    "checked.sports.subtitle": "Sports Equipment",
+    "transit.solution.title": "환승 시 금지물품 적발 대처요령",
+    "transit.solution.subtitle": "Solutions for Transit Security Issues",
+    "transit.solution.noticeTitle": "환승 보안검색에서 문제가 발생했을 때",
+    "transit.solution.noticeBody": "경유지별로 규정이 다르므로 현지 보안요원의 안내를 따라야 합니다.",
+    "transit.solution.tipTitle": "💡 예방 팁",
+    "transit.solution.tipBody": "면세품 구매는 최종 경유지에서 하고, 경유지별 규정을 사전에 확인하세요. 중요한 물품은 휴대수하물에 넣지 마세요.",
+    "transit.lag.noticeTitle": "주의사항",
+    "transit.lag.noticeBody": "일부 경유지(오사카 등)에서는 면세품도 폐기될 수 있으니 사전 확인 필요합니다.",
+    "transit.proc.title": "환승보안검색 절차",
+    "transit.proc.subtitle": "Transit Security Procedures",
+    "transit.country.title": "국가별 환승규정",
+    "transit.country.subtitle": "Country-Specific Rules",
+    "transit.country.tipTitle": "환승 팁",
+    "transit.country.tipBody": "경유지 공항 규정을 사전에 확인하고, 면세품 구매는 최종 경유지에서 하는 것이 안전합니다.",
+    "footer.important": "※ 중요 안내사항 ※",
+    "footer.note1": "본 안내는 대한민국 공항 기준이며, 해외 공항 및 항공사별로 규정이 다를 수 있습니다.",
+    "footer.note2": "최종 판단은 공항 보안검색요원 및 해당 항공사의 규정에 따릅니다.",
+    "footer.note3": "「항공보안법」 제44조에 따라 금지물품 반입 시 2년 이상 5년 이하의 징역에 처해질 수 있습니다.",
+    "footer.contactLabel": "관련 문의:"
+  },
+  en: {
+    "title.main": "Aviation Security Information Hub",
+    "title.sub": "Aviation Security Comprehensive Guide System",
+    "legal.heading": "📋 Legal References",
+    "legal.basis.label": "※ References:",
+    "legal.basis.1": "• Aviation Security Act Art. 21(1), MOLIT Notice 2021-1274 'Prohibited Articles on Board'",
+    "legal.basis.2": "• Aviation Security Act Art. 14(5), MOLIT Notice 2021-864 'LAG (Liquids, Aerosols, Gels) Carry-on Policy'",
+    "legal.basis.3": "• ICAO Standards and Recommended Practices for security screening",
+    "tabs.carry": "Carry-on",
+    "tabs.carry.en": "Carry-on Baggage",
+    "tabs.checked": "Checked",
+    "tabs.checked.en": "Checked Baggage",
+    "tabs.transit": "Transit Screening",
+    "tabs.transit.en": "Transit Security",
+    "carry.solution.title": "What to do if a prohibited item is found",
+    "carry.solution.subtitle": "Solutions for Prohibited Items",
+    "carry.solution.noticeTitle": "When a prohibited item is detected",
+    "carry.solution.noticeBody": "Choose one of the options below calmly.",
+    "carry.solution.timeTitle": "⏰ Check your time buffer",
+    "carry.solution.timeBody": "Use options ②③④ only if you have enough time before departure. If short on time, disposal is recommended.",
+    "carry.lag.title": "Liquids / Aerosols / Gels",
+    "carry.lag.subtitle": "Liquids, Aerosols & Gels",
+    "status.restricted": "⚡ Restricted",
+    "carry.lag.rule1": "Only containers ≤100ml are allowed",
+    "carry.lag.rule2": "Store in one 1L transparent zip bag per person",
+    "carry.lag.rule3": "Includes cosmetics, toothpaste, shampoo, beverages",
+    "carry.lag.rule4": "Soupy foods/sauces over 100ml (kimchi juice, pastes, jam) are not allowed",
+    "carry.lag.rule5": "Medicines may be exempt with prescription",
+    "carry.lag.noticeTitle": "International flights only",
+    "carry.lag.noticeBody": "No LAG limits on domestic flights; strictly applied on international routes.",
+    "carry.sharp.title": "Sharp Objects",
+    "carry.sharp.subtitle": "Sharp Objects",
+    "status.prohibited": "❌ Prohibited",
+    "carry.sharp.allowedTitle": "Allowed",
+    "carry.sharp.allowedBody": "Disposable razors, scissors ≤6cm, and non-pointed nail clippers are allowed.",
+    "carry.tools.title": "Tools",
+    "carry.tools.subtitle": "Tools",
+    "carry.sports.title": "Sports Items / Blunt objects",
+    "carry.sports.subtitle": "Sports Equipment",
+    "carry.sports.noticeTitle": "Ball items",
+    "carry.sports.noticeBody": "Deflate to below one-third for carry-on.",
+    "carry.battery.title": "Electronics & Batteries",
+    "carry.battery.subtitle": "Electronic Devices",
+    "status.allowed": "✅ Allowed",
+    "carry.battery.noticeTitle": "Battery Safety",
+    "carry.battery.noticeBody": "Lithium batteries must be in carry-on only; checked-in is prohibited.",
+    "carry.selfdef.title": "Self-Defense Items",
+    "carry.selfdef.subtitle": "Self-Defense Items",
+    "checked.solution.title": "If a prohibited item is in checked baggage",
+    "checked.solution.subtitle": "Solutions for Checked Baggage Violations",
+    "checked.solution.noticeTitle": "When prohibited items are in checked baggage",
+    "checked.solution.noticeBody": "Stricter handling due to direct impact on flight safety.",
+    "checked.danger.title": "Dangerous Goods",
+    "checked.danger.subtitle": "Dangerous Materials",
+    "status.totalban": "❌ Total Ban",
+    "checked.firearms.title": "Firearms",
+    "checked.firearms.subtitle": "Firearms",
+    "status.special": "⚡ Special Permit Required",
+    "checked.battery.title": "Batteries",
+    "checked.battery.subtitle": "Batteries",
+    "checked.battery.noticeTitle": "Battery Safety",
+    "checked.battery.noticeBody": "All spare batteries must be carried in hand luggage; never in checked baggage.",
+    "checked.alcohol.title": "Alcohol & Liquids",
+    "checked.alcohol.subtitle": "Alcohol & Liquids",
+    "checked.alcohol.rulesTitle": "🍺 Alcohol allowance by ABV",
+    "checked.alcohol.exampleLabel": "Example:",
+    "checked.sports.title": "Sports Equipment",
+    "checked.sports.subtitle": "Sports Equipment",
+    "transit.solution.title": "Transit: if prohibited items are found",
+    "transit.solution.subtitle": "Solutions for Transit Security Issues",
+    "transit.solution.noticeTitle": "When issues arise during transit screening",
+    "transit.solution.noticeBody": "Follow local security staff as rules vary by airport.",
+    "transit.solution.tipTitle": "💡 Prevention tips",
+    "transit.solution.tipBody": "Buy duty-free at the final transit and check rules in advance. Keep important items out of carry-on if unsure.",
+    "transit.lag.noticeTitle": "Note",
+    "transit.lag.noticeBody": "Some airports (e.g., Osaka) may still confiscate duty-free items.",
+    "transit.proc.title": "Transit Screening Procedure",
+    "transit.proc.subtitle": "Transit Security Procedures",
+    "transit.country.title": "By Country / Region",
+    "transit.country.subtitle": "Country-Specific Rules",
+    "transit.country.tipTitle": "Transit Tip",
+    "transit.country.tipBody": "Check rules for transit airports; buying duty-free at the last transit is safest.",
+    "footer.important": "※ Important Notes ※",
+    "footer.note1": "This guide is based on Korean airports; rules may differ by country/airline.",
+    "footer.note2": "Final decisions follow airport security staff and airline rules.",
+    "footer.note3": "Under the Aviation Security Act Art. 44, violating prohibited items can lead to 2–5 years imprisonment.",
+    "footer.contactLabel": "Contact:"
+  },
+  zh: {
+    "title.main": "航空安保综合指南系统",
+    "title.sub": "Aviation Security Comprehensive Guide System",
+    "legal.heading": "📋 法律依据",
+    "legal.basis.label": "※ 依据：",
+    "legal.basis.1": "• 《航空保安法》第21条第1款，国土交通部告示2021-1274号《禁止携带上机物品》",
+    "legal.basis.2": "• 《航空保安法》第14条第5款，国土交通部告示2021-864号《液体/喷雾/凝胶携带规定》",
+    "legal.basis.3": "• 依据ICAO标准与建议做法实施安检",
+    "tabs.carry": "随身行李",
+    "tabs.carry.en": "Carry-on Baggage",
+    "tabs.checked": "托运行李",
+    "tabs.checked.en": "Checked Baggage",
+    "tabs.transit": "中转安检",
+    "tabs.transit.en": "Transit Security",
+    "carry.solution.title": "发现违禁品时的处理方式",
+    "carry.solution.subtitle": "违禁品处置方案",
+    "carry.solution.noticeTitle": "当安检发现违禁品时",
+    "carry.solution.noticeBody": "请冷静，从下列方式中选择其一处理。",
+    "carry.solution.timeTitle": "⏰ 注意时间余量",
+    "carry.solution.timeBody": "仅在起飞前时间充足时选择②③④。时间紧迫时建议丢弃。",
+    "carry.lag.title": "液体/喷雾/凝胶",
+    "carry.lag.subtitle": "Liquids, Aerosols & Gels",
+    "status.restricted": "⚡ 有条件允许",
+    "carry.lag.rule1": "仅允许≤100ml容器",
+    "carry.lag.rule2": "每人限1个1L透明密封袋",
+    "carry.lag.rule3": "含化妆品、牙膏、洗发水、饮料等",
+    "carry.lag.rule4": "含汤汁食物/酱类超过100ml不得携带",
+    "carry.lag.rule5": "药品凭处方可例外",
+    "carry.lag.noticeTitle": "仅适用于国际航班",
+    "carry.lag.noticeBody": "国内航班无液体限制；国际航班严格执行。",
+    "carry.sharp.title": "尖锐物品",
+    "carry.sharp.subtitle": "Sharp Objects",
+    "status.prohibited": "❌ 禁止携带",
+    "carry.sharp.allowedTitle": "允许物品",
+    "carry.sharp.allowedBody": "一次性剃须刀、≤6cm剪刀、非尖头指甲钳允许。",
+    "carry.tools.title": "工具类",
+    "carry.tools.subtitle": "Tools",
+    "carry.sports.title": "运动用品/钝器",
+    "carry.sports.subtitle": "Sports Equipment",
+    "carry.sports.noticeTitle": "球类物品",
+    "carry.sports.noticeBody": "放气至不足1/3可随身携带。",
+    "carry.battery.title": "电子设备与电池",
+    "carry.battery.subtitle": "Electronic Devices",
+    "status.allowed": "✅ 允许",
+    "carry.battery.noticeTitle": "电池注意事项",
+    "carry.battery.noticeBody": "锂电池必须随身携带，严禁托运。",
+    "carry.selfdef.title": "防身用品",
+    "carry.selfdef.subtitle": "Self-Defense Items",
+    "checked.solution.title": "托运行李发现违禁品的应对",
+    "checked.solution.subtitle": "托运行李违规处理方案",
+    "checked.solution.noticeTitle": "托运行李发现违禁品时",
+    "checked.solution.noticeBody": "因涉及飞行安全，管理更为严格。",
+    "checked.danger.title": "危险品",
+    "checked.danger.subtitle": "Dangerous Materials",
+    "status.totalban": "❌ 完全禁止",
+    "checked.firearms.title": "枪支类",
+    "checked.firearms.subtitle": "Firearms",
+    "status.special": "⚡ 需特别许可",
+    "checked.battery.title": "电池类",
+    "checked.battery.subtitle": "Batteries",
+    "checked.battery.noticeTitle": "电池安全",
+    "checked.battery.noticeBody": "所有备用电池必须随身携带，严禁放入托运行李。",
+    "checked.alcohol.title": "酒类与液体",
+    "checked.alcohol.subtitle": "Alcohol & Liquids",
+    "checked.alcohol.rulesTitle": "🍺 按酒精度数的携带规定",
+    "checked.alcohol.exampleLabel": "示例：",
+    "checked.sports.title": "运动器材",
+    "checked.sports.subtitle": "Sports Equipment",
+    "transit.solution.title": "中转时发现违禁品的处理",
+    "transit.solution.subtitle": "中转安检问题处理",
+    "transit.solution.noticeTitle": "中转安检出现问题时",
+    "transit.solution.noticeBody": "各地规则不同，请遵循当地安检人员指引。",
+    "transit.solution.tipTitle": "💡 预防提示",
+    "transit.solution.tipBody": "尽量在最后一程中转地购买免税品，提前确认规则；重要物品避免放随身行李。",
+    "transit.lag.noticeTitle": "注意事项",
+    "transit.lag.noticeBody": "部分中转地（如大阪）可能仍会没收免税液体。",
+    "transit.proc.title": "中转安检流程",
+    "transit.proc.subtitle": "Transit Security Procedures",
+    "transit.country.title": "各国/地区中转规定",
+    "transit.country.subtitle": "Country-Specific Rules",
+    "transit.country.tipTitle": "中转提示",
+    "transit.country.tipBody": "提前查询中转地机场规定；在最后中转地购买免税品更稳妥。",
+    "footer.important": "※ 重要提示 ※",
+    "footer.note1": "本指南基于韩国机场；各国及航空公司规定可能不同。",
+    "footer.note2": "最终以机场安检人员和航空公司规定为准。",
+    "footer.note3": "依据《航空保安法》第44条，违规携带违禁品可能被判处2至5年徒刑。",
+    "footer.contactLabel": "咨询："
+  },
+  ja: {
+    "title.main": "航空保安統合案内システム",
+    "title.sub": "Aviation Security Comprehensive Guide System",
+    "legal.heading": "📋 法的根拠",
+    "legal.basis.label": "※ 根拠：",
+    "legal.basis.1": "・「航空保安法」第21条第1項、国土交通部告示2021-1274号「機内持込禁止物品」",
+    "legal.basis.2": "・「航空保安法」第14条第5項、国土交通部告示2021-864号「液体・スプレー・ジェル類の持込基準」",
+    "legal.basis.3": "・ICAO基準および推奨に基づく保安検査規定",
+    "tabs.carry": "機内持込手荷物",
+    "tabs.carry.en": "Carry-on Baggage",
+    "tabs.checked": "受託手荷物",
+    "tabs.checked.en": "Checked Baggage",
+    "tabs.transit": "乗継ぎ保安検査",
+    "tabs.transit.en": "Transit Security",
+    "carry.solution.title": "禁止物が見つかった場合の対応",
+    "carry.solution.subtitle": "違反物品の対処方法",
+    "carry.solution.noticeTitle": "保安検査で禁止物が見つかったら",
+    "carry.solution.noticeBody": "落ち着いて、以下の方法から一つを選択してください。",
+    "carry.solution.timeTitle": "⏰ 時間の余裕を確認",
+    "carry.solution.timeBody": "出発まで十分に時間がある場合のみ②③④を選択。時間がない場合は廃棄を推奨。",
+    "carry.lag.title": "液体・スプレー・ジェル類",
+    "carry.lag.subtitle": "Liquids, Aerosols & Gels",
+    "status.restricted": "⚡ 条件付き許可",
+    "carry.lag.rule1": "100ml以下の容器のみ可",
+    "carry.lag.rule2": "1人1個の1L透明ジッパーバッグに収納",
+    "carry.lag.rule3": "化粧品、歯磨き粉、シャンプー、飲料を含む",
+    "carry.lag.rule4": "汁物・みそ・コチュジャン・ジャム等が100ml超は不可",
+    "carry.lag.rule5": "医薬品は処方箋提示で例外",
+    "carry.lag.noticeTitle": "国際線のみ適用",
+    "carry.lag.noticeBody": "国内線には液体制限はありませんが、国際線では厳格に適用されます。",
+    "carry.sharp.title": "鋭利物",
+    "carry.sharp.subtitle": "Sharp Objects",
+    "status.prohibited": "❌ 持込禁止",
+    "carry.sharp.allowedTitle": "許可品目",
+    "carry.sharp.allowedBody": "使い捨てカミソリ、6cm以下のはさみ、先端が尖っていない爪切りは可。",
+    "carry.tools.title": "工具類",
+    "carry.tools.subtitle": "Tools",
+    "carry.sports.title": "スポーツ用品・鈍器",
+    "carry.sports.subtitle": "Sports Equipment",
+    "carry.sports.noticeTitle": "ボール類",
+    "carry.sports.noticeBody": "空気を1/3未満まで抜けば機内持込可。",
+    "carry.battery.title": "電子機器・バッテリー",
+    "carry.battery.subtitle": "Electronic Devices",
+    "status.allowed": "✅ 許可",
+    "carry.battery.noticeTitle": "バッテリー注意事項",
+    "carry.battery.noticeBody": "リチウム電池は機内持込のみ可。受託手荷物は禁止。",
+    "carry.selfdef.title": "護身用品",
+    "carry.selfdef.subtitle": "Self-Defense Items",
+    "checked.solution.title": "受託手荷物での禁止物対応",
+    "checked.solution.subtitle": "受託手荷物違反の対処",
+    "checked.solution.noticeTitle": "受託手荷物から禁止物が見つかった場合",
+    "checked.solution.noticeBody": "航空機の安全に直結するため、より厳格に管理されます。",
+    "checked.danger.title": "危険物",
+    "checked.danger.subtitle": "Dangerous Materials",
+    "status.totalban": "❌ 完全禁止",
+    "checked.firearms.title": "銃器類",
+    "checked.firearms.subtitle": "Firearms",
+    "status.special": "⚡ 特別許可が必要",
+    "checked.battery.title": "バッテリー類",
+    "checked.battery.subtitle": "Batteries",
+    "checked.battery.noticeTitle": "バッテリー安全",
+    "checked.battery.noticeBody": "スペアバッテリーはすべて機内持込。受託手荷物は禁止。",
+    "checked.alcohol.title": "酒類・液体類",
+    "checked.alcohol.subtitle": "Alcohol & Liquids",
+    "checked.alcohol.rulesTitle": "🍺 アルコール度数別の持込規定",
+    "checked.alcohol.exampleLabel": "例：",
+    "checked.sports.title": "スポーツ用品",
+    "checked.sports.subtitle": "Sports Equipment",
+    "transit.solution.title": "乗継ぎで禁止物が見つかった場合",
+    "transit.solution.subtitle": "乗継ぎ保安のトラブル対応",
+    "transit.solution.noticeTitle": "乗継ぎ保安検査で問題が起きたとき",
+    "transit.solution.noticeBody": "空港により規定が異なるため、現地職員の指示に従ってください。",
+    "transit.solution.tipTitle": "💡 予防のコツ",
+    "transit.solution.tipBody": "免税品は最後の乗継ぎ地で購入し、事前に規定を確認しましょう。重要品は機内持込に入れないのが安全。",
+    "transit.lag.noticeTitle": "注意事項",
+    "transit.lag.noticeBody": "一部の乗継ぎ地（大阪など）では免税品でも没収される場合があります。",
+    "transit.proc.title": "乗継ぎ保安検査の手順",
+    "transit.proc.subtitle": "Transit Security Procedures",
+    "transit.country.title": "国・地域別の規定",
+    "transit.country.subtitle": "Country-Specific Rules",
+    "transit.country.tipTitle": "乗継ぎのヒント",
+    "transit.country.tipBody": "乗継ぎ空港の規定を事前確認し、免税品は最後の乗継ぎ地での購入が安全です。",
+    "footer.important": "※ 重要なお知らせ ※",
+    "footer.note1": "本案内は韓国の空港基準です。国や航空会社により規定が異なる場合があります。",
+    "footer.note2": "最終判断は保安検査員および航空会社の規定に従います。",
+    "footer.note3": "「航空保安法」第44条により、禁止物の持込は2年以上5年以下の懲役となる場合があります。",
+    "footer.contactLabel": "お問い合わせ："
+  }
+};
+
+function applyTranslations(lang) {
+  const dict = I18N[lang] || I18N.ko;
+  document.querySelectorAll("[data-i18n]").forEach(node => {
+    const key = node.getAttribute("data-i18n");
+    if (dict[key]) {
+      node.textContent = dict[key];
+    }
+  });
+  // 상태 동기화
+  document.documentElement.lang = lang;
+  localStorage.setItem("avsec.lang", lang);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const select = document.getElementById("langSelect");
+  const saved = localStorage.getItem("avsec.lang");
+  const initial = saved && I18N[saved] ? saved : (select?.value || "ko");
+  if (select) {
+    select.value = initial;
+    select.addEventListener("change", (e) => applyTranslations(e.target.value));
+  }
+  applyTranslations(initial);
+});
+
+// --- injected keys ---
+I18N.ko["ui.lang.label"] = "언어 선택:";
+I18N.en["ui.lang.label"] = "Language:";
+I18N.zh["ui.lang.label"] = "语言选择：";
+I18N.ja["ui.lang.label"] = "言語選択：";
+I18N.ko["checked.solution.opt1"] = "① 폐기";
+I18N.en["checked.solution.opt1"] = "① Dispose";
+I18N.zh["checked.solution.opt1"] = "① 丢弃";
+I18N.ja["checked.solution.opt1"] = "① 廃棄";
+I18N.ko["carry.solution.opt1.sub"] = "- 가장 간단한 방법이지만 물품을 되찾을 수 없습니다";
+I18N.en["carry.solution.opt1.sub"] = "- Easiest but you cannot retrieve the item";
+I18N.zh["carry.solution.opt1.sub"] = "- 最简单，但无法取回物品";
+I18N.ja["carry.solution.opt1.sub"] = "- 最も簡単ですが品物は戻りません";
+I18N.ko["carry.solution.opt2"] = "② 위탁수하물 접수";
+I18N.en["carry.solution.opt2"] = "② Check it in";
+I18N.zh["carry.solution.opt2"] = "② 办理托运";
+I18N.ja["carry.solution.opt2"] = "② 受託手荷物へ";
+I18N.ko["carry.solution.opt2.sub"] = "- 항공사 카운터 방문하여 위탁수하물로 접수 (추가 요금 발생 가능)";
+I18N.en["carry.solution.opt2.sub"] = "- Visit airline counter to check in (fees may apply)";
+I18N.zh["carry.solution.opt2.sub"] = "- 前往航空公司柜台办理托运（可能收费）";
+I18N.ja["carry.solution.opt2.sub"] = "- 航空会社カウンターで手続き（追加料金の可能性）";
+I18N.ko["carry.solution.opt3"] = "③ 보관/택배 서비스";
+I18N.en["carry.solution.opt3"] = "③ Storage/Courier";
+I18N.zh["carry.solution.opt3"] = "③ 行李寄存/快递";
+I18N.ja["carry.solution.opt3"] = "③ 一時保管/宅配";
+I18N.ko["carry.solution.opt3.sub"] = "- 공항 내 짐 보관 서비스 또는 국내 택배 서비스 이용";
+I18N.en["carry.solution.opt3.sub"] = "- Use airport storage or domestic courier";
+I18N.zh["carry.solution.opt3.sub"] = "- 使用机场行李寄存或国内快递";
+I18N.ja["carry.solution.opt3.sub"] = "- 空港の手荷物預かりまたは国内宅配を利用";
+I18N.ko["carry.solution.opt4"] = "④ 지인 인계";
+I18N.en["carry.solution.opt4"] = "④ Hand to companion";
+I18N.zh["carry.solution.opt4"] = "④ 交给同行/熟人";
+I18N.ja["carry.solution.opt4"] = "④ 知人に預ける";
+I18N.ko["carry.solution.opt4.sub"] = "- 출국장 밖에 있는 지인에게 물품 전달 (재입장 필요)";
+I18N.en["carry.solution.opt4.sub"] = "- Hand over to someone outside (re-entry required)";
+I18N.zh["carry.solution.opt4.sub"] = "- 交给出境厅外的熟人（需重新安检）";
+I18N.ja["carry.solution.opt4.sub"] = "- 出発ロビー外の知人へ受け渡し（再入場が必要）";
+I18N.ko["carry.sharp.li1"] = "면도칼날, 커터칼날, 다목적 칼";
+I18N.en["carry.sharp.li1"] = "Razor blades, utility blades, multi-purpose knives";
+I18N.zh["carry.sharp.li1"] = "剃须刀片、美工刀片、多功能刀";
+I18N.ja["carry.sharp.li1"] = "替刃・カッター刃・マルチツールの刃";
+I18N.ko["carry.sharp.li2"] = "접이식 칼, 외과용 메스";
+I18N.en["carry.sharp.li2"] = "Folding knives, surgical scalpels";
+I18N.zh["carry.sharp.li2"] = "折叠刀、外科手术刀";
+I18N.ja["carry.sharp.li2"] = "折りたたみナイフ、メス";
+I18N.ko["carry.sharp.li3"] = "날 길이 6cm 초과 가위";
+I18N.en["carry.sharp.li3"] = "Scissors with blade over 6cm";
+I18N.zh["carry.sharp.li3"] = "刀刃超过6cm的剪刀";
+I18N.ja["carry.sharp.li3"] = "刃が6cm超のはさみ";
+I18N.ko["carry.sharp.li4"] = "뾰족한 손톱깎이, 송곳";
+I18N.en["carry.sharp.li4"] = "Pointed nail clippers, awls";
+I18N.zh["carry.sharp.li4"] = "尖头指甲钳、锥子";
+I18N.ja["carry.sharp.li4"] = "先端の尖った爪切り、千枚通し";
+I18N.ko["carry.tools.li1"] = "망치, 드릴 및 부품";
+I18N.en["carry.tools.li1"] = "Hammers, drills and parts";
+I18N.zh["carry.tools.li1"] = "锤子、电钻及其部件";
+I18N.ja["carry.tools.li1"] = "ハンマー、ドリルと部品";
+I18N.ko["carry.tools.li2"] = "금속 길이 6cm 초과 드라이버";
+I18N.en["carry.tools.li2"] = "Metal screwdrivers over 6cm";
+I18N.zh["carry.tools.li2"] = "金属螺丝刀（超过6cm）";
+I18N.ja["carry.tools.li2"] = "金属製ドライバー（6cm超）";
+I18N.ko["carry.tools.li3"] = "도끼, 전정가위, 못총, 톱";
+I18N.en["carry.tools.li3"] = "Axes, pruning shears, nail guns, saws";
+I18N.zh["carry.tools.li3"] = "斧头、修枝剪、射钉枪、锯";
+I18N.ja["carry.tools.li3"] = "斧、剪定ばさみ、釘打ち機、のこぎり";
+I18N.ko["carry.tools.li4"] = "송곳, 대형 스패너";
+I18N.en["carry.tools.li4"] = "Awls, large wrenches";
+I18N.zh["carry.tools.li4"] = "锥子、大号扳手";
+I18N.ja["carry.tools.li4"] = "千枚通し、大型スパナ";
+I18N.ko["carry.sports.li1"] = "야구방망이, 하키스틱, 골프채";
+I18N.en["carry.sports.li1"] = "Baseball bats, hockey sticks, golf clubs";
+I18N.zh["carry.sports.li1"] = "棒球棒、曲棍球杆、高尔夫球杆";
+I18N.ja["carry.sports.li1"] = "バット、ホッケースティック、ゴルフクラブ";
+I18N.ko["carry.sports.li2"] = "당구큐, 아령, 볼링공";
+I18N.en["carry.sports.li2"] = "Cues, dumbbells, bowling balls";
+I18N.zh["carry.sports.li2"] = "台球杆、哑铃、保龄球";
+I18N.ja["carry.sports.li2"] = "キュー、ダンベル、ボウリングの球";
+I18N.ko["carry.sports.li3"] = "활, 화살, 양궁 장비";
+I18N.en["carry.sports.li3"] = "Bows, arrows, archery gear";
+I18N.zh["carry.sports.li3"] = "弓、箭、射箭装备";
+I18N.ja["carry.sports.li3"] = "弓・矢・アーチェリー用品";
+I18N.ko["carry.sports.li4"] = "1/3 이상 공기 주입된 공류";
+I18N.en["carry.sports.li4"] = "Balls inflated over one-third";
+I18N.zh["carry.sports.li4"] = "气体充入超过1/3的球类";
+I18N.ja["carry.sports.li4"] = "空気が1/3以上入ったボール類";
+I18N.ko["carry.battery.li1"] = "보조배터리 (100Wh 이하) - 휴대만 가능";
+I18N.en["carry.battery.li1"] = "Power banks (≤100Wh) — carry-on only";
+I18N.zh["carry.battery.li1"] = "充电宝（≤100Wh）— 仅限随身携带";
+I18N.ja["carry.battery.li1"] = "モバイルバッテリー（100Wh以下）— 機内持込のみ";
+I18N.ko["carry.battery.li2"] = "노트북, 태블릿, 스마트폰";
+I18N.en["carry.battery.li2"] = "Laptops, tablets, smartphones";
+I18N.zh["carry.battery.li2"] = "笔记本、平板、智能手机";
+I18N.ja["carry.battery.li2"] = "ノートPC、タブレット、スマートフォン";
+I18N.ko["carry.battery.li3"] = "전자담배 (휴대만 가능, 위탁 불가)";
+I18N.en["carry.battery.li3"] = "E-cigarettes (carry-on only; no check-in)";
+I18N.zh["carry.battery.li3"] = "电子烟（仅随身，不可托运）";
+I18N.ja["carry.battery.li3"] = "電子タバコ（機内持込のみ・受託不可）";
+I18N.ko["carry.battery.li4"] = "카메라, 캠코더";
+I18N.en["carry.battery.li4"] = "Cameras, camcorders";
+I18N.zh["carry.battery.li4"] = "相机、摄像机";
+I18N.ja["carry.battery.li4"] = "カメラ、ビデオカメラ";
+I18N.ko["carry.selfdef.li1"] = "전자충격기, 스턴건";
+I18N.en["carry.selfdef.li1"] = "Tasers, stun guns";
+I18N.zh["carry.selfdef.li1"] = "电击器、眩晕枪";
+I18N.ja["carry.selfdef.li1"] = "テーザー・スタンガン";
+I18N.ko["carry.selfdef.li2"] = "고추스프레이, 최루스프레이";
+I18N.en["carry.selfdef.li2"] = "Pepper spray, tear gas spray";
+I18N.zh["carry.selfdef.li2"] = "胡椒喷雾、催泪喷雾";
+I18N.ja["carry.selfdef.li2"] = "ペッパースプレー、催涙スプレー";
+I18N.ko["carry.selfdef.li3"] = "쿠보탄, 호신용 스틱";
+I18N.en["carry.selfdef.li3"] = "Kubotan, defense sticks";
+I18N.zh["carry.selfdef.li3"] = "指节棍、防身棍";
+I18N.ja["carry.selfdef.li3"] = "クボタン、防身用スティック";
+I18N.ko["carry.selfdef.li4"] = "쌍절곤, 호신용 무기";
+I18N.en["carry.selfdef.li4"] = "Nunchaku, defense weapons";
+I18N.zh["carry.selfdef.li4"] = "双节棍、防身武器";
+I18N.ja["carry.selfdef.li4"] = "ヌンチャク、防身武器";
+I18N.ko["checked.solution.opt1.sub"] = " - 위험물질은 즉시 폐기 처리됩니다";
+I18N.en["checked.solution.opt1.sub"] = " - Dangerous goods are discarded immediately";
+I18N.zh["checked.solution.opt1.sub"] = " - 危险品将被立即弃置";
+I18N.ja["checked.solution.opt1.sub"] = " - 危険物は即時廃棄";
+I18N.ko["checked.solution.opt2"] = "② 휴대수하물 전환";
+I18N.en["checked.solution.opt2"] = "② Move to carry-on";
+I18N.zh["checked.solution.opt2"] = "② 转为随身携带";
+I18N.ja["checked.solution.opt2"] = "② 機内持込へ変更";
+I18N.ko["checked.solution.opt2.sub"] = " - 허용 품목인 경우 휴대수하물로 변경 가능";
+I18N.en["checked.solution.opt2.sub"] = " - If allowed, move to carry-on";
+I18N.zh["checked.solution.opt2.sub"] = " - 若为允许物品，可改为随身";
+I18N.ja["checked.solution.opt2.sub"] = " - 許可品なら機内持込に変更可";
+I18N.ko["checked.danger.li1"] = "폭발물, 화약, 폭죽류";
+I18N.en["checked.danger.li1"] = "Explosives, gunpowder, fireworks";
+I18N.zh["checked.danger.li1"] = "爆炸物、火药、烟花类";
+I18N.ja["checked.danger.li1"] = "爆発物、火薬、花火類";
+I18N.ko["checked.danger.li2"] = "인화성 가스 및 액체";
+I18N.en["checked.danger.li2"] = "Flammable gases and liquids";
+I18N.zh["checked.danger.li2"] = "易燃气体及液体";
+I18N.ja["checked.danger.li2"] = "可燃性ガス・液体";
+I18N.ko["checked.danger.li3"] = "독성물질, 부식성 물질";
+I18N.en["checked.danger.li3"] = "Toxic and corrosive substances";
+I18N.zh["checked.danger.li3"] = "有毒/腐蚀性物质";
+I18N.ja["checked.danger.li3"] = "有毒・腐食性物質";
+I18N.ko["checked.danger.li4"] = "방사능 물질";
+I18N.en["checked.danger.li4"] = "Radioactive materials";
+I18N.zh["checked.danger.li4"] = "放射性物质";
+I18N.ja["checked.danger.li4"] = "放射性物質";
+I18N.ko["checked.firearms.li1"] = "총기소지허가서 또는 수출입허가서 제시";
+I18N.en["checked.firearms.li1"] = "Show firearm license or import/export permit";
+I18N.zh["checked.firearms.li1"] = "出示枪支持有许可或进出口许可";
+I18N.ja["checked.firearms.li1"] = "所持許可または輸出入許可の提示";
+I18N.ko["checked.firearms.li2"] = "총알과 분리 보관";
+I18N.en["checked.firearms.li2"] = "Store ammunition separately";
+I18N.zh["checked.firearms.li2"] = "子弹分离存放";
+I18N.ja["checked.firearms.li2"] = "弾薬は分離保管";
+I18N.ko["checked.firearms.li3"] = "견고한 보관함에 잠금 보관";
+I18N.en["checked.firearms.li3"] = "Store locked in a sturdy case";
+I18N.zh["checked.firearms.li3"] = "置于坚固上锁的箱内";
+I18N.ja["checked.firearms.li3"] = "堅牢なケースで施錠保管";
+I18N.ko["checked.firearms.li4"] = "항공사 사전 신고 필수";
+I18N.en["checked.firearms.li4"] = "Pre-declare to the airline";
+I18N.zh["checked.firearms.li4"] = "须事先向航空公司申报";
+I18N.ja["checked.firearms.li4"] = "航空会社への事前申告必須";
+I18N.ko["checked.battery.li1"] = "여분 리튬배터리";
+I18N.en["checked.battery.li1"] = "Spare lithium batteries";
+I18N.zh["checked.battery.li1"] = "备用锂电池";
+I18N.ja["checked.battery.li1"] = "予備リチウム電池";
+I18N.ko["checked.battery.li2"] = "보조배터리";
+I18N.en["checked.battery.li2"] = "Power banks";
+I18N.zh["checked.battery.li2"] = "充电宝";
+I18N.ja["checked.battery.li2"] = "モバイルバッテリー";
+I18N.ko["checked.battery.li3"] = "전자담배";
+I18N.en["checked.battery.li3"] = "E-cigarettes";
+I18N.zh["checked.battery.li3"] = "电子烟";
+I18N.ja["checked.battery.li3"] = "電子タバコ";
+I18N.ko["checked.battery.li4"] = "손상된 배터리가 포함된 기기";
+I18N.en["checked.battery.li4"] = "Devices with damaged batteries";
+I18N.zh["checked.battery.li4"] = "含有损坏电池的设备";
+I18N.ja["checked.battery.li4"] = "損傷した電池を含む機器";
+I18N.ko["checked.alcohol.rule1.label"] = "① 24도(%) 미만:";
+I18N.en["checked.alcohol.rule1.label"] = "① Under 24% ABV:";
+I18N.zh["checked.alcohol.rule1.label"] = "① 酒精度<24%：";
+I18N.ja["checked.alcohol.rule1.label"] = "① アルコール度数24%未満：";
+I18N.ko["checked.alcohol.rule1.body"] = "양의 제한 없이 반입 가능 (소주, 맥주, 와인)";
+I18N.en["checked.alcohol.rule1.body"] = "No quantity limit (soju, beer, wine)";
+I18N.zh["checked.alcohol.rule1.body"] = "数量不限（烧酒、啤酒、葡萄酒）";
+I18N.ja["checked.alcohol.rule1.body"] = "数量制限なし（焼酎・ビール・ワイン）";
+I18N.ko["checked.alcohol.rule2.label"] = "② 24도(%) 이상 70도(%) 미만:";
+I18N.en["checked.alcohol.rule2.label"] = "② 24%–70% ABV:";
+I18N.zh["checked.alcohol.rule2.label"] = "② 酒精度24%–70%：";
+I18N.ja["checked.alcohol.rule2.label"] = "② 24%～70%：";
+I18N.ko["checked.alcohol.rule2.body"] = "1인당 5L까지 반입 가능 (위스키, 보드카)";
+I18N.en["checked.alcohol.rule2.body"] = "Up to 5L per person (whisky, vodka)";
+I18N.zh["checked.alcohol.rule2.body"] = "每人最多5L（威士忌、伏特加）";
+I18N.ja["checked.alcohol.rule2.body"] = "1人あたり5Lまで（ウイスキー、ウォッカ）";
+I18N.ko["checked.alcohol.rule3.label"] = "③ 70도(%) 이상:";
+I18N.en["checked.alcohol.rule3.label"] = "③ 70% ABV or higher:";
+I18N.zh["checked.alcohol.rule3.label"] = "③ 酒精度≥70%：";
+I18N.ja["checked.alcohol.rule3.label"] = "③ 70%以上：";
+I18N.ko["checked.alcohol.rule3.body"] = "반입 불가 (에탄올 등 인화성 위험물질)";
+I18N.en["checked.alcohol.rule3.body"] = "Not allowed (ethanol etc., flammable)";
+I18N.zh["checked.alcohol.rule3.body"] = "不可携带（乙醇等易燃危険物）";
+I18N.ja["checked.alcohol.rule3.body"] = "持込不可（エタノール等の可燃性危険物）";
+I18N.ko["checked.allowed.cosmetics"] = "화장품 (개별 500ml 이하, 총 2kg까지)";
+I18N.en["checked.allowed.cosmetics"] = "Cosmetics (≤500ml each, total ≤2kg)";
+I18N.zh["checked.allowed.cosmetics"] = "化妆品（单件≤500ml，总量≤2kg）";
+I18N.ja["checked.allowed.cosmetics"] = "化粧品（各500ml以下、合計2kgまで）";
+I18N.ko["checked.allowed.medsfood"] = "의약품, 식품류";
+I18N.en["checked.allowed.medsfood"] = "Medicines, food items";
+I18N.zh["checked.allowed.medsfood"] = "药品、食品";
+I18N.ja["checked.allowed.medsfood"] = "医薬品、食品類";
+I18N.ko["checked.allowed.drinks"] = "생수, 음료수 (대용량)";
+I18N.en["checked.allowed.drinks"] = "Water, beverages (large volume)";
+I18N.zh["checked.allowed.drinks"] = "矿泉水、饮料（大容量）";
+I18N.ja["checked.allowed.drinks"] = "飲料水・飲料（大容量）";
+I18N.ko["checked.sports.li1"] = "골프클럽, 야구방망이";
+I18N.en["checked.sports.li1"] = "Golf clubs, baseball bats";
+I18N.zh["checked.sports.li1"] = "高尔夫球杆、棒球棒";
+I18N.ja["checked.sports.li1"] = "ゴルフクラブ、バット";
+I18N.ko["checked.sports.li2"] = "스키장비, 스노보드";
+I18N.en["checked.sports.li2"] = "Ski gear, snowboard";
+I18N.zh["checked.sports.li2"] = "滑雪装备、单板";
+I18N.ja["checked.sports.li2"] = "スキー用品、スノーボード";
+I18N.ko["checked.sports.li3"] = "자전거 (포장 시)";
+I18N.en["checked.sports.li3"] = "Bicycle (packed)";
+I18N.zh["checked.sports.li3"] = "自行车（打包）";
+I18N.ja["checked.sports.li3"] = "自転車（梱包時）";
+I18N.ko["checked.sports.li4"] = "낚시대, 서핑보드";
+I18N.en["checked.sports.li4"] = "Fishing rods, surfboards";
+I18N.zh["checked.sports.li4"] = "鱼竿、冲浪板";
+I18N.ja["checked.sports.li4"] = "釣り竿、サーフボード";
+I18N.ko["transit.solution.opt1.sub"] = " - 경유지 규정 위반 시 즉시 폐기 (보상 없음)";
+I18N.en["transit.solution.opt1.sub"] = " - Immediate disposal at transit if rules are violated (no compensation)";
+I18N.zh["transit.solution.opt1.sub"] = " - 违反中转地规定将立即丢弃（不赔偿）";
+I18N.ja["transit.solution.opt1.sub"] = " - 乗継ぎ地の規定違反は即時廃棄（補償なし）";
+I18N.ko["transit.solution.opt2"] = "② 면세품 재포장";
+I18N.en["transit.solution.opt2"] = "② Repack duty-free";
+I18N.zh["transit.solution.opt2"] = "② 免税品重新封袋";
+I18N.ja["transit.solution.opt2"] = "② 免税品の再封入";
+I18N.ko["transit.solution.opt2.sub"] = " - STEB 봉투 재밀봉 또는 소분 (가능한 경우)";
+I18N.en["transit.solution.opt2.sub"] = " - Reseal STEB bag or split (if possible)";
+I18N.zh["transit.solution.opt2.sub"] = " - 重新密封STEB袋或分装（如可行）";
+I18N.ja["transit.solution.opt2.sub"] = " - STEB袋の再封印または小分け（可能な場合）";
+I18N.ko["transit.lag.title"] = "환승 시 액체류";
+I18N.en["transit.lag.title"] = "Transit Liquids";
+I18N.zh["transit.lag.title"] = "中转液体";
+I18N.ja["transit.lag.title"] = "乗継ぎ時の液体";
+I18N.ko["transit.lag.subtitle"] = "Transit Liquids";
+I18N.en["transit.lag.subtitle"] = "Transit Liquids";
+I18N.zh["transit.lag.subtitle"] = "Transit Liquids";
+I18N.ja["transit.lag.subtitle"] = "Transit Liquids";
+I18N.ko["status.conditional"] = "⚡ 조건부 허용";
+I18N.en["status.conditional"] = "⚡ Conditionally Allowed";
+I18N.zh["status.conditional"] = "⚡ 条件允许";
+I18N.ja["status.conditional"] = "⚡ 条件付き許可";
+I18N.ko["transit.lag.li1"] = "면세품 전용봉투(STEB) 밀봉 상태 유지";
+I18N.en["transit.lag.li1"] = "Keep STEB bag sealed";
+I18N.zh["transit.lag.li1"] = "保持STEB专用袋封口完好";
+I18N.ja["transit.lag.li1"] = "STEBのシールを維持";
+I18N.ko["transit.lag.li2"] = "영수증과 함께 보관 필수";
+I18N.en["transit.lag.li2"] = "Keep receipt with it";
+I18N.zh["transit.lag.li2"] = "需与收据一同保存";
+I18N.ja["transit.lag.li2"] = "レシートと共に保管必須";
+I18N.ko["transit.lag.li3"] = "경유지 규정에 따라 재검색 가능";
+I18N.en["transit.lag.li3"] = "Rescreening may occur depending on transit rules";
+I18N.zh["transit.lag.li3"] = "根据中转地规定可能复检";
+I18N.ja["transit.lag.li3"] = "乗継ぎ地の規定により再検査の可能性";
+I18N.ko["transit.lag.li4"] = "최종 목적지까지 미개봉 상태 유지";
+I18N.en["transit.lag.li4"] = "Keep unopened until final destination";
+I18N.zh["transit.lag.li4"] = "在最终目的地前保持未开封";
+I18N.ja["transit.lag.li4"] = "最終目的地まで未開封のまま維持";
+I18N.ko["transit.proc.title.txt"] = "환승보안검색 절차";
+I18N.en["transit.proc.title.txt"] = "Transit Screening Procedure";
+I18N.zh["transit.proc.title.txt"] = "中转安检流程";
+I18N.ja["transit.proc.title.txt"] = "乗継ぎ保安検査の手順";
+I18N.ko["transit.country.title.txt"] = "국가별 환승규정";
+I18N.en["transit.country.title.txt"] = "Country-Specific Rules";
+I18N.zh["transit.country.title.txt"] = "各国/地区中转规定";
+I18N.ja["transit.country.title.txt"] = "国・地域別の規定";
+I18N.ko["transit.country.us.label"] = "미국:";
+I18N.en["transit.country.us.label"] = "USA:";
+I18N.zh["transit.country.us.label"] = "美国：";
+I18N.ja["transit.country.us.label"] = "米国：";
+I18N.ko["transit.country.us.body"] = "모든 환승객 재검색 필수";
+I18N.en["transit.country.us.body"] = "All transit passengers must be rescreened";
+I18N.zh["transit.country.us.body"] = "所有中转旅客必须重新安检";
+I18N.ja["transit.country.us.body"] = "すべての乗継ぎ客は再検査必須";
+I18N.ko["transit.country.jp.label"] = "일본:";
+I18N.en["transit.country.jp.label"] = "Japan:";
+I18N.zh["transit.country.jp.label"] = "日本：";
+I18N.ja["transit.country.jp.label"] = "日本：";
+I18N.ko["transit.country.jp.body"] = "특정 액체류 엄격 제한";
+I18N.en["transit.country.jp.body"] = "Strict limits on certain liquids";
+I18N.zh["transit.country.jp.body"] = "对特定液体严格限制";
+I18N.ja["transit.country.jp.body"] = "特定の液体を厳しく制限";
+I18N.ko["transit.country.cn.label"] = "중국:";
+I18N.en["transit.country.cn.label"] = "China:";
+I18N.zh["transit.country.cn.label"] = "中国：";
+I18N.ja["transit.country.cn.label"] = "中国：";
+I18N.ko["transit.country.cn.body"] = "전자기기 별도 검사";
+I18N.en["transit.country.cn.body"] = "Devices may require separate screening";
+I18N.zh["transit.country.cn.body"] = "电子设备可能需单独检查";
+I18N.ja["transit.country.cn.body"] = "電子機器は別途検査";
+I18N.ko["transit.country.eu.label"] = "유럽:";
+I18N.en["transit.country.eu.label"] = "EU:";
+I18N.zh["transit.country.eu.label"] = "欧洲：";
+I18N.ja["transit.country.eu.label"] = "欧州：";
+I18N.ko["transit.country.eu.body"] = "EU 내 환승 시 완화";
+I18N.en["transit.country.eu.body"] = "Eased within EU transit";
+I18N.zh["transit.country.eu.body"] = "在欧盟内中转较宽松";
+I18N.ja["transit.country.eu.body"] = "EU内の乗継ぎは緩和";
+
+// --- injected keys v3 ---
+I18N.ko["misc.carry.label2"] = "휴대수하물";
+I18N.en["misc.carry.label2"] = "Carry-on";
+I18N.zh["misc.carry.label2"] = "随身行李";
+I18N.ja["misc.carry.label2"] = "機内持込手荷物";
+I18N.ko["misc.checked.label2"] = "위탁수하물";
+I18N.en["misc.checked.label2"] = "Checked baggage";
+I18N.zh["misc.checked.label2"] = "托运行李";
+I18N.ja["misc.checked.label2"] = "受託手荷物";
+I18N.ko["misc.solutions_for"] = "Solutions for";
+I18N.en["misc.solutions_for"] = "Solutions for";
+I18N.zh["misc.solutions_for"] = "处理方案";
+I18N.ja["misc.solutions_for"] = "対処方法";
+I18N.ko["misc.violations"] = "Violations";
+I18N.en["misc.violations"] = "Violations";
+I18N.zh["misc.violations"] = "违规";
+I18N.ja["misc.violations"] = "違反";
+I18N.ko["checked.solution.opt1.sub.tail"] = "은 즉시 폐기 처리됩니다";
+I18N.en["checked.solution.opt1.sub.tail"] = "are discarded immediately";
+I18N.zh["checked.solution.opt1.sub.tail"] = "将被立即弃置";
+I18N.ja["checked.solution.opt1.sub.tail"] = "は即時廃棄されます";
+I18N.ko["checked.solution.opt2.sub.tail"] = "인 경우 휴대수하물로 변경 가능";
+I18N.en["checked.solution.opt2.sub.tail"] = "if allowed, can be moved to carry-on";
+I18N.zh["checked.solution.opt2.sub.tail"] = "若为允许物品，可改为随身携带";
+I18N.ja["checked.solution.opt2.sub.tail"] = "許可品なら機内持込に変更可";
+I18N.ko["checked.alcohol.rule3.body.tail"] = "반입 불가 (에탄올 등 인화성";
+I18N.en["checked.alcohol.rule3.body.tail"] = "Not allowed (ethanol etc., flammable)";
+I18N.zh["checked.alcohol.rule3.body.tail"] = "不可携带（乙醇等易燃）";
+I18N.ja["checked.alcohol.rule3.body.tail"] = "持込不可（エタノール等可燃性）";
+I18N.ko["checked.alcohol.examples"] = "소주(20도), 맥주(5도) = 제한없음 | 위스키(40도) = 5L까지 | 에탄올(95도) = 반입금지";
+I18N.en["checked.alcohol.examples"] = "Soju (20%), Beer (5%) = no limit | Whisky (40%) = up to 5L | Ethanol (95%) = not allowed";
+I18N.zh["checked.alcohol.examples"] = "烧酒(20%)、啤酒(5%)=不限 | 威士忌(40%)=最多5L | 乙醇(95%)=禁止";
+I18N.ja["checked.alcohol.examples"] = "焼酎(20%)・ビール(5%)=制限なし | ウイスキー(40%)=5Lまで | エタノール(95%)=持込不可";
+I18N.ko["misc.transit.label2"] = "환승보안검색";
+I18N.en["misc.transit.label2"] = "Transit Security Screening";
+I18N.zh["misc.transit.label2"] = "中转安检";
+I18N.ja["misc.transit.label2"] = "乗継ぎ保安検査";
+I18N.ko["misc.issues"] = "Issues";
+I18N.en["misc.issues"] = "Issues";
+I18N.zh["misc.issues"] = "问题";
+I18N.ja["misc.issues"] = "問題";
+I18N.ko["transit.solution.opt1.full"] = "- 경유지 규정 위반 시 즉시 폐기 (보상 없음)";
+I18N.en["transit.solution.opt1.full"] = "- Immediate disposal at transit if rules are violated (no compensation)";
+I18N.zh["transit.solution.opt1.full"] = "- 违反中转地规定将立即丢弃（不赔偿）";
+I18N.ja["transit.solution.opt1.full"] = "- 乗継ぎ地の規定違反は即時廃棄（補償なし）";
+I18N.ko["transit.solution.opt2.full"] = "- STEB 봉투 재밀봉 또는 소분 (가능한 경우)";
+I18N.en["transit.solution.opt2.full"] = "- Reseal STEB bag or split (if possible)";
+I18N.zh["transit.solution.opt2.full"] = "- 重新密封STEB袋或分装（如可行）";
+I18N.ja["transit.solution.opt2.full"] = "- STEB袋の再封印または小分け（可能な場合）";
+I18N.ko["misc.procedures"] = "Procedures";
+I18N.en["misc.procedures"] = "Procedures";
+I18N.zh["misc.procedures"] = "程序";
+I18N.ja["misc.procedures"] = "手順";
+I18N.ko["status.country.varies"] = "⚡ 국가별 상이";
+I18N.en["status.country.varies"] = "⚡ Varies by country";
+I18N.zh["status.country.varies"] = "⚡ 各国不同";
+I18N.ja["status.country.varies"] = "⚡ 国により異なる";
+I18N.ko["transit.proc.r1"] = "국제선→국내선: 보안검색 재실시";
+I18N.en["transit.proc.r1"] = "International → Domestic: rescreening";
+I18N.zh["transit.proc.r1"] = "国际→国内：重新安检";
+I18N.ja["transit.proc.r1"] = "国際→国内：再検査";
+I18N.ko["transit.proc.r2"] = "국제선→국제선: 경유지 규정 적용";
+I18N.en["transit.proc.r2"] = "International → International: transit rules apply";
+I18N.zh["transit.proc.r2"] = "国际→国际：适用中转地规定";
+I18N.ja["transit.proc.r2"] = "国際→国際：乗継ぎ地の規定を適用";
+I18N.ko["transit.proc.r3"] = "국내선→국제선: 국제선 규정 적용";
+I18N.en["transit.proc.r3"] = "Domestic → International: international rules apply";
+I18N.zh["transit.proc.r3"] = "国内→国际：适用国际航班规定";
+I18N.ja["transit.proc.r3"] = "国内→国際：国際線の規定を適用";
+I18N.ko["transit.proc.r4"] = "미국, 중국 등: 무조건 재검색";
+I18N.en["transit.proc.r4"] = "USA, China, etc.: mandatory rescreening";
+I18N.zh["transit.proc.r4"] = "美国、中国等：必须重新安检";
+I18N.ja["transit.proc.r4"] = "米国・中国など：再検査が必須";
+I18N.ko["transit.prohibited.title"] = "환승 시 금지물품";
+I18N.en["transit.prohibited.title"] = "Transit Prohibited Items";
+I18N.zh["transit.prohibited.title"] = "中转违禁物";
+I18N.ja["transit.prohibited.title"] = "乗継ぎ禁止品";
+I18N.ko["transit.prohibited.title.en"] = "Transit Prohibited Items";
+I18N.en["transit.prohibited.title.en"] = "Transit Prohibited Items";
+I18N.zh["transit.prohibited.title.en"] = "Transit Prohibited Items";
+I18N.ja["transit.prohibited.title.en"] = "Transit Prohibited Items";
+I18N.ko["transit.prohibited.li1"] = "경유지에서 구매한 100ml 초과 액체류";
+I18N.en["transit.prohibited.li1"] = "Liquids over 100ml purchased at transit";
+I18N.zh["transit.prohibited.li1"] = "在中转地购买的超过100ml的液体";
+I18N.ja["transit.prohibited.li1"] = "乗継ぎ地で購入した100ml超の液体";
+I18N.ko["transit.prohibited.li2"] = "밀봉 해제된 면세품";
+I18N.en["transit.prohibited.li2"] = "Unsealed duty-free items";
+I18N.zh["transit.prohibited.li2"] = "已开封的免税品";
+I18N.ja["transit.prohibited.li2"] = "封印が解かれた免税品";
+I18N.ko["transit.prohibited.li3"] = "경유지 현지 규정 위반 물품";
+I18N.en["transit.prohibited.li3"] = "Items violating local transit rules";
+I18N.zh["transit.prohibited.li3"] = "违反中转地规定的物品";
+I18N.ja["transit.prohibited.li3"] = "乗継ぎ地の規定に違反する物品";
+I18N.ko["transit.prohibited.li4"] = "영수증 분실된 면세품";
+I18N.en["transit.prohibited.li4"] = "Duty-free items without receipt";
+I18N.zh["transit.prohibited.li4"] = "丢失小票的免税品";
+I18N.ja["transit.prohibited.li4"] = "レシートを紛失した免税品";
+I18N.ko["footer.contact.line1"] = "항공보안365: www.avsec365.or.kr | 한국교통안전공단: 054-459-7114";
+I18N.en["footer.contact.line1"] = "AvSec 365: www.avsec365.or.kr | Korea Transportation Safety Authority: 054-459-7114";
+I18N.zh["footer.contact.line1"] = "航空安保365: www.avsec365.or.kr | 韩国交通安全公团: 054-459-7114";
+I18N.ja["footer.contact.line1"] = "航空保安365: www.avsec365.or.kr | 韓国交通安全公団: 054-459-7114";
+I18N.ko["footer.contact.line2"] = "인천국제공항: 1577-2600 | 김포공항: 02-2660-2114";
+I18N.en["footer.contact.line2"] = "Incheon Intl Airport: 1577-2600 | Gimpo Airport: 02-2660-2114";
+I18N.zh["footer.contact.line2"] = "仁川国际机场: 1577-2600 | 金浦机场: 02-2660-2114";
+I18N.ja["footer.contact.line2"] = "仁川国際空港: 1577-2600 | 金浦空港: 02-2660-2114";
+</script>
+</body>
+</html>
